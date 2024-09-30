@@ -153,4 +153,16 @@ describe RetailTransaction do
       assert_invalid_transition { tx.reopen! }
     end
   end
+
+  it "can be refunded" do
+    tx.add_item("bobcat")
+    tx.check_out!
+    tx.payment_info = "15 cents and a nail"
+    tx.process_payment!
+    tx.payment_authorized!
+    assert_equal true, tx.settled?
+    tx.refund!
+    assert_equal true, tx.refunded?
+  end
+
 end
